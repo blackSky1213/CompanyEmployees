@@ -17,6 +17,5 @@ namespace CompanyEmployees.ContextFactory
 
             return new RepositoryContext(builder.Options);
         }
-
     }
 }
