@@ -15,8 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CompanyEmployees.Controllers\CompanyEmployees.Presentation.csproj" />
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
