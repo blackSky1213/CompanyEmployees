@@ -1,6 +1,6 @@
-﻿using Repository;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
+using Repository;
 
 namespace CompanyEmployees.ContextFactory
 {
