@@ -20,10 +20,15 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            throw new Exception("exception");
             var compaines = _service.CompanyService.GetAllCompanies(trackChanges: false);
             return Ok(compaines);
         }
 
+        [HttpGet("{id:guid}")]
+        public IActionResult GetCompany(Guid id)
+        {
+            var company = _service.CompanyService.GetCompany(id, trackChanges: false);
+            return Ok(company);
+        }
     }
 }
