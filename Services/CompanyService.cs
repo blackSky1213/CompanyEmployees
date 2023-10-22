@@ -29,11 +29,34 @@ namespace Services
         public CompanyDTO GetCompany(Guid companyId, bool trackChanges)
         {
             var company = _repository.Company.GetCompany(companyId, trackChanges);
-            if(company is null)
+            if (company is null)
             {
                 throw new CompanyNotFoundException(companyId);
             }
             return _mapper.Map<CompanyDTO>(company);
+        }
+
+        public CompanyDTO CreateCompany(CompanyForCreationDTO company)
+        {
+            var companyEntity = _mapper.Map<Company>(company);
+
+            _repository.Company.CreateCompany(companyEntity);
+            _repository.Save();
+
+            return _mapper.Map<CompanyDTO>(companyEntity);
+        }
+
+        public IEnumerable<CompanyDTO> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            if (ids is null)
+                throw new IdParametersBadRequestException();
+
+            var companyEntities = _repository.Company.GetByIds(ids, trackChanges);
+
+            if (ids.Count() != companyEntities.Count())
+                throw new CollectionByIdsBadRequestException();
+
+            return _mapper.Map<IEnumerable<CompanyDTO>>(companyEntities);
         }
     }
 }
