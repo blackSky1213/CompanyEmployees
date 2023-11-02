@@ -59,14 +59,14 @@ namespace Services
             return _mapper.Map<IEnumerable<CompanyDTO>>(companyEntities);
         }
 
-        public (IEnumerable<CompanyDTO> companies,string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDTO> companyCollection)
+        public (IEnumerable<CompanyDTO> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDTO> companyCollection)
         {
             if (companyCollection is null)
                 throw new CompanyCollectionBadRequest();
 
             var companyEntites = _mapper.Map<IEnumerable<Company>>(companyCollection);
 
-            foreach(var company in companyEntites)
+            foreach (var company in companyEntites)
             {
                 _repository.Company.CreateCompany(company);
             }
@@ -76,17 +76,29 @@ namespace Services
             var companyReturn = _mapper.Map<IEnumerable<CompanyDTO>>(companyEntites);
             var ids = string.Join(", ", companyReturn.Select(c => c.Id));
 
-            return (companies:companyReturn,ids: ids);
+            return (companies: companyReturn, ids: ids);
         }
 
-        public void DeleteCompany(Guid companyId,bool trackChanges) { 
-        
+        public void DeleteCompany(Guid companyId, bool trackChanges)
+        {
+
             var company = _repository.Company.GetCompany(companyId, trackChanges);
 
             if (company is null)
                 throw new CompanyNotFoundException(companyId);
 
             _repository.Company.DeleteCompany(company);
+            _repository.Save();
+        }
+
+        public void UpdateCompany(Guid id, CompanyForUpdateDTO companyForUpdate, bool trackChanges)
+        {
+            var companyEntity = _repository.Company.GetCompany(id, trackChanges);
+
+            if (companyEntity is null)
+                throw new CompanyNotFoundException(id);
+
+            _mapper.Map(companyForUpdate, companyEntity);
             _repository.Save();
         }
     }

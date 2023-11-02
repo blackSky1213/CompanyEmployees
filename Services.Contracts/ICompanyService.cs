@@ -9,6 +9,7 @@ namespace Services.Contracts
         CompanyDTO CreateCompany(CompanyForCreationDTO company);
         IEnumerable<CompanyDTO> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
         (IEnumerable<CompanyDTO> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDTO> companyCollection);
-        void DeleteCompany(Guid companyId,bool trackChanges);
+        void DeleteCompany(Guid companyId, bool trackChanges);
+        void UpdateCompany(Guid id, CompanyForUpdateDTO companyForUpdate, bool trackChanges);
     }
 }
