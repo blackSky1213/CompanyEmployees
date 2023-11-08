@@ -2,7 +2,7 @@
 
 namespace Repository
 {
-    public class RepositoryManager: IRepositoryManager
+    public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContext _repositoryContext;
         private readonly Lazy<ICompanyRepository> _companyRepository;
@@ -11,7 +11,7 @@ namespace Repository
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
-            _companyRepository = new Lazy<ICompanyRepository>(()=> new
+            _companyRepository = new Lazy<ICompanyRepository>(() => new
             CompanyRepository(repositoryContext));
             _employeeRespository = new Lazy<IEmployeeRepository>(() => new
             EmployeeRepository(repositoryContext));
@@ -20,6 +20,6 @@ namespace Repository
         public ICompanyRepository Company => _companyRepository.Value;
         public IEmployeeRepository Employee => _employeeRespository.Value;
 
-        public void Save() => _repositoryContext.SaveChanges();
+        public async Task Save() => await _repositoryContext.SaveChangesAsync();
     }
 }
