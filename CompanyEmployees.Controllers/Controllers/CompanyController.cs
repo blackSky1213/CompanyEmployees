@@ -1,4 +1,5 @@
-﻿using CompanyEmployees.Presentation.ModelBinders;
+﻿using CompanyEmployees.Presentation.ActionFilter;
+using CompanyEmployees.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Shared.DataTransferObjects;
@@ -29,12 +30,10 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDTO company)
         {
-            if (company is null)
-                return BadRequest("CompanyForCreationDTO object is null.");
-
-            var createdCompany =  await _service.CompanyService.CreateCompanyAsync(company);
+            var createdCompany = await _service.CompanyService.CreateCompanyAsync(company);
 
             return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
         }
@@ -58,21 +57,18 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteCompany(Guid id)
         {
-           await _service.CompanyService.DeleteCompanyAsync(id, trackChanges: false);
+            await _service.CompanyService.DeleteCompanyAsync(id, trackChanges: false);
             return NoContent();
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid id, CompanyForUpdateDTO company)
         {
-
-            if (company is null)
-                return BadRequest("companyForUpdate object is null.");
-
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-           await _service.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true);
+            await _service.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true);
 
             return NoContent();
         }

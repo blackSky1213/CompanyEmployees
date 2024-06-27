@@ -12,9 +12,9 @@ namespace CompanyEmployees
                 .ForMember(c => c.FullAddress,
                 opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
-            CreateMap<Employee, EmployeeDTO>();
+            CreateMap<Employee, EmployeeDTO>().ReverseMap();
 
-            CreateMap<CompanyForCreationDTO, Company>();
+            CreateMap<CompanyForCreationDTO, Company>().ReverseMap();
             CreateMap<EmployeeForCreationDTO, Employee>();
             CreateMap<EmployeeForUpdateDTO, Employee>().ReverseMap();
             CreateMap<CompanyForUpdateDTO, Company>();
