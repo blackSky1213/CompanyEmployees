@@ -1,12 +1,13 @@
 ﻿using Entities.Models;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
+using System.Dynamic;
 
 namespace Services.Contracts
 {
     public interface IEmployeeService
     {
-        Task<(IEnumerable<EmployeeDTO> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId,EmployeeParameters employeeParameters ,bool trackChanges);
+        Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId,EmployeeParameters employeeParameters ,bool trackChanges);
         Task<EmployeeDTO> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges);
         Task<EmployeeDTO> CreateEmployeeAsync(Guid companyId, EmployeeForCreationDTO employeeForCreation, bool trackChanges);
         Task DeleteEmployeeForCompanyAsync(Guid companyId, Guid id, bool trackChanges);
