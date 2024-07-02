@@ -18,6 +18,7 @@ namespace CompanyEmployees.Presentation.Controllers
         public EmployeeController(IServiceManager service) => _service = service;
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             var pagedResult = await _service.EmployeeService.GetEmployeesAsync(companyId,employeeParameters, trackChanges: false);
