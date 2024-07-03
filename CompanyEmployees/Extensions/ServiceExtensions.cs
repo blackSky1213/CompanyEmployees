@@ -1,10 +1,17 @@
 ﻿using Contracts;
+using Entities.ConfigurationModels;
+using Entities.Models;
 using LoggerService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Services;
 using Services.Contracts;
+using System.Text;
+using System.Threading.Tasks.Dataflow;
 
 namespace CompanyEmployees.Extensions
 {
@@ -55,5 +62,43 @@ namespace CompanyEmployees.Extensions
         }
 
         public static void ConfigureResponseCaching(this IServiceCollection services) => services.AddResponseCaching();
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<RepositoryContext>()
+            .AddDefaultTokenProviders();
+        }
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration) {
+            var jwtConfiguration = new JwtConfiguration();
+            configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option =>
+            {
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SECRET))
+                };
+            });
+        }
     }
 }

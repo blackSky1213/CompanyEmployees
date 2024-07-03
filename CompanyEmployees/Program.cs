@@ -42,6 +42,9 @@ builder.Services.AddControllers(config =>
 
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 var app = builder.Build();
 
@@ -64,6 +67,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseCors("CorsPolicy");
 app.UseResponseCaching();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
